@@ -8,7 +8,9 @@
 // @match        https://issues.amazon.com/issues/*
 // @match        https://tt.amazon.com/*
 // @updateURL    https://raw.githubusercontent.com/joshm3u/copy-mandatory-info/main/copy_info.js
+// @updateURL    https://greasyfork.org/scripts/475173-copy-mandatory-information/code/Copy%20mandatory%20information.user.js
 // @downloadURL  https://raw.githubusercontent.com/joshm3u/copy-mandatory-info/main/copy_info.js
+// @downloadURL  https://greasyfork.org/scripts/475173-copy-mandatory-information/code/Copy%20mandatory%20information.user.js
 // @grant        GM_setClipboard
 // ==/UserScript==
 
