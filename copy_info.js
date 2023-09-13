@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Copy mandatory information
 // @namespace    https://*.amazon.com
-// @version      0.1
+// @version      0.1a
 // @description  One-click copy of page title in Markdown format and display it in a pop-up window
 // @match        https://sim.amazon.com/issues/*
 // @match        https://issues.amazon.com/issues/*
@@ -14,6 +14,7 @@
 /*
 REVISION HISTORY:
 0.1 - 2023-09-13 - chengng@ - Initial setup
+0.1a - 2023-09-13 - chengng@ - Modify to alert users that creation of MCM only works with Chrome
 */
 
 (function () {
@@ -82,7 +83,7 @@ REVISION HISTORY:
       style: `position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); border-radius: 4px; padding: 20px 20px; width: 450px; background: #292A2D; color: #ffffff; line-height: 20px; z-index: 300; font-size: 16px; font-family: Microsoft YaHei;`,
     });
 
-    let resultText = createEle('p', 'Information copied, proceed to create MCM', {
+    let resultText = createEle('p', 'Information copied, the below creation of MCM only workds with Chrome', {
       style: `color: #ffffff; font-size: 16px; margin: 0;`,
     });
 
