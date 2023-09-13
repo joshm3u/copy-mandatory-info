@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Copy mandatory information
 // @namespace    https://*.amazon.com
-// @version      0.1a
+// @version      0.2
 // @description  One-click copy of page title in Markdown format and display it in a pop-up window
 // @match        https://sim.amazon.com/issues/*
 // @match        https://issues.amazon.com/issues/*
@@ -14,7 +14,7 @@
 /*
 REVISION HISTORY:
 0.1 - 2023-09-13 - chengng@ - Initial setup
-0.1a - 2023-09-13 - chengng@ - Modify to alert users that creation of MCM only works with Chrome
+0.2 - 2023-09-13 - chengng@ - Modify to alert users that creation of MCM only works with Chrome
 */
 
 (function () {
