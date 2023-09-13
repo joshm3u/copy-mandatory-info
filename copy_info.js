@@ -1,15 +1,15 @@
 // ==UserScript==
 // @name         Copy mandatory information
 // @namespace    https://*.amazon.com
-// @version      0.4
+// @version      0.41
 // @author       chengng@
 // @description  One-click copy of page title in Markdown format
 // @match        https://sim.amazon.com/issues/*
 // @match        https://issues.amazon.com/issues/*
 // @match        https://tt.amazon.com/*
 // @updateURL    https://raw.githubusercontent.com/joshm3u/copy-mandatory-info/main/copy_info.js
-// @updateURL    https://greasyfork.org/scripts/475173-copy-mandatory-information/code/Copy%20mandatory%20information.user.js
 // @downloadURL  https://raw.githubusercontent.com/joshm3u/copy-mandatory-info/main/copy_info.js
+// @updateURL    https://greasyfork.org/scripts/475173-copy-mandatory-information/code/Copy%20mandatory%20information.user.js
 // @downloadURL  https://greasyfork.org/scripts/475173-copy-mandatory-information/code/Copy%20mandatory%20information.user.js
 // @grant        GM_setClipboard
 // ==/UserScript==
@@ -19,7 +19,7 @@ REVISION HISTORY:
 0.1 - 2023-09-13 - chengng@ - Initial setup
 0.2 - 2023-09-13 - chengng@ - Modify to alert users that creation of MCM only works with Chrome
 0.3 - 2023-09-13 - chengng@ - add author info and browser detection
-0.4 - 2023-09-13 - chengng@ - change the script to activate by button for better user experience
+0.4 to 0.41 - 2023-09-13 - chengng@ - change the script to activate by button for better user experience
 */
 
 (function () {
