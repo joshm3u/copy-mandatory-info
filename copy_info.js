@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Copy mandatory information
 // @namespace    https://*.amazon.com
-// @version      0.3
+// @version      0.4
 // @author       chengng@
 // @description  One-click copy of page title in Markdown format
 // @match        https://sim.amazon.com/issues/*
@@ -18,11 +18,14 @@
 REVISION HISTORY:
 0.1 - 2023-09-13 - chengng@ - Initial setup
 0.2 - 2023-09-13 - chengng@ - Modify to alert users that creation of MCM only works with Chrome
-0.3 - 2023-09-13 - chengng@ - add author info, browser detection
+0.3 - 2023-09-13 - chengng@ - add author info and browser detection
+0.4 - 2023-09-13 - chengng@ - change the script to activate by button for better user experience
 */
 
 (function () {
   'use strict';
+
+  let alertShown = false; // Variable to track if the alert has been shown
 
   // Detect the user's browser
   const isChrome = /Chrome/.test(navigator.userAgent);
@@ -44,41 +47,173 @@ REVISION HISTORY:
     return ele;
   }
 
-  // Save the content between the first "[" and "]" as userinput1
-  let userinput1;
+  // Create a container for the floating buttons
+  const buttonContainer = createEle('div', '', {
+    style: `
+      position: fixed;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+      z-index: 9999;
+    `,
+  });
 
-  // Save the content between the second "[" and "]" as userinput2
-  let userinput2;
+  // Create the "Install Cable" button
+  const installCableBtn = createEle('button', 'Install Cable', {
+    style: `
+      width: 120px;
+      height: 32px;
+      margin: 10px 0;
+      border: #799dd7;
+      border-radius: 4px;
+      background: #799dd7;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      display: block;
+    `,
+  });
+  installCableBtn.onclick = function () {
+    // Redirect to the Install Cable link in a new tab
+    window.open('https://mcm.amazon.com/cms/new?from_template=d3a442df-63cb-49b6-8501-60a202a1fa59', '_blank');
+    executeRestOfScript();
+  };
 
-  // Save the content between the third "[" and "]" as userinput3
-  let userinput3;
+  // Create the "Patch Cable" button
+  const patchCableBtn = createEle('button', 'Patch Cable', {
+    style: `
+      width: 120px;
+      height: 32px;
+      margin: 10px 0;
+      border: #799dd7;
+      border-radius: 4px;
+      background: #799dd7;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      display: block;
+    `,
+  });
+  patchCableBtn.onclick = function () {
+    // Redirect to the Patch Cable link in a new tab
+    window.open('https://mcm.amazon.com/cms/new?from_template=7b61ac86-0baa-44af-b9f5-be930912b72d', '_blank');
+    executeRestOfScript();
+  };
 
-  // Automatically copy the page title and URL to the clipboard
-  function copyPageTitleAndURL() {
+  // Create the "HW install" button
+  const hwInstallBtn = createEle('button', 'HW install', {
+    style: `
+      width: 120px;
+      height: 32px;
+      margin: 10px 0;
+      border: #799dd7;
+      border-radius: 4px;
+      background: #799dd7;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      display: block;
+    `,
+  });
+  hwInstallBtn.onclick = function () {
+    // Redirect to the HW install link in a new tab
+    window.open('https://mcm.amazon.com/cms/new?from_template=0d640ded-d096-48a6-b3f5-c7c2d5fa76a7', '_blank');
+    executeRestOfScript();
+  };
+
+  // Create the "Button OFF" button
+  const buttonOffBtn = createEle('button', 'Button OFF', {
+    style: `
+      width: 120px;
+      height: 32px;
+      margin: 10px 0;
+      border: #ccc;
+      border-radius: 4px;
+      background: #ccc;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      display: block;
+    `,
+  });
+  buttonOffBtn.onclick = function () {
+    // Remove the button container
+    buttonContainer.remove();
+  };
+
+  // Append buttons to the button container
+  buttonContainer.appendChild(installCableBtn);
+  buttonContainer.appendChild(patchCableBtn);
+  buttonContainer.appendChild(hwInstallBtn);
+  buttonContainer.appendChild(buttonOffBtn);
+
+  // Append the button container to the document body
+  document.body.appendChild(buttonContainer);
+
+  // This function will be executed after clicking one of the buttons
+  function executeRestOfScript() {
+    if (!alertShown) {
+      // Show the alert message in the style of one of the first three buttons
+      const alertMessage = createEle('div', 'Please allow previous MCM script to complete before selecting another.', {
+        style: `
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background-color: #799dd7;
+          color: #fff;
+          padding: 10px;
+          border-radius: 4px;
+          z-index: 9999;
+          box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+          text-align: center;
+        `,
+      });
+
+      const closeBtn = createEle('button', 'Close', {
+        style: `
+          width: 80px;
+          height: 32px;
+          margin-top: 10px;
+          background-color: #ccc;
+          color: #fff;
+          border: none;
+          border-radius: 4px;
+          outline: none;
+          cursor: pointer;
+        `,
+      });
+      closeBtn.onclick = function () {
+        alertMessage.remove();
+      };
+
+      alertMessage.appendChild(closeBtn);
+      document.body.appendChild(alertMessage);
+      alertShown = true;
+    }
+
+    // Automatically copy the page title and URL to the clipboard
     let titleInfo = document.querySelector('title').innerText;
     let pageURL = window.location.href; // Get the current page's URL
 
     // Extract the content between the first "[" and "]"
     let match1 = /\[(.*?)\]/.exec(titleInfo);
-    userinput1 = match1 && match1[1] ? match1[1].replace(/[\[\]]/g, "") : "";
+    let userinput1 = match1 && match1[1] ? match1[1].replace(/[\[\]]/g, "") : "";
 
     // Extract the content between the second "[" and "]"
     let match2 = /\[.*?\](.*?)\]/.exec(titleInfo);
-    userinput2 = match2 && match2[1] ? match2[1].replace(/[\[\]]/g, "") : "";
+    let userinput2 = match2 && match2[1] ? match2[1].replace(/[\[\]]/g, "") : "";
 
     // Extract the content between the third "[" and "]"
     let match3 = /\[.*?\].*?\](.*?)\]/.exec(titleInfo);
-    userinput3 = match3 && match3[1] ? match3[1].replace(/[\[\]]/g, "") : "";
+    let userinput3 = match3 && match3[1] ? match3[1].replace(/[\[\]]/g, "") : "";
 
-    // Check if userinput2 contains "NW" or "DE", if not, set it as "NWxxxx2023"
-    if (!userinput2.match(/NW|DE/i)) {
-      // If userinput2 doesn't contain "NW" or "DE", set it as "NWxxxx2023"
-      userinput2 = "NWxxxx2023";
-      // Show an information message
-      alert("No proper FBN detected, please reach out to TIPM for it. We will use temporary FBN NWxxxx2023 for now in the MCM");
+    // Limit userinput2 to 8 letters after NW or DE
+    const matchNWDE = /(NW|DE)(.{8})/i.exec(userinput2);
+    if (matchNWDE) {
+      userinput2 = matchNWDE[1] + matchNWDE[2];
     } else {
-      // Limit userinput2 to 8 letters from NW or DE
-      userinput2 = userinput2.match(/NW|DE/i)[0] + userinput2.substring(2, 10);
+      userinput2 = "NWxxxx2023";
     }
 
     // Save userinput1, userinput2, userinput3, and the page URL to the clipboard
@@ -86,68 +221,5 @@ REVISION HISTORY:
     GM_setClipboard(combinedInput); // Use GM_setClipboard to set clipboard content
 
     console.log('Page title and URL copied to clipboard: ' + combinedInput);
-
-    // Display the pop-up result with buttons
-    popUpResult();
-  }
-
-  // Pop up the result in a custom alert box with buttons
-  function popUpResult() {
-    let alertBox = createEle('div', '', {
-      style: `position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); border-radius: 4px; padding: 20px 20px; width: 450px; background: #292A2D; color: #ffffff; line-height: 20px; z-index: 300; font-size: 16px; font-family: Microsoft YaHei;`,
-    });
-
-    let resultText = createEle('p', 'Information copied, the below creation of MCM only works with Chrome', {
-      style: `color: #ffffff; font-size: 16px; margin: 0;`,
-    });
-
-    // Create the first button for "Install Cable"
-    let installCableBtn = createEle('button', 'Install Cable', {
-      style: `width: 120px; height: 32px; margin: 15px 10px 0 0; border: #799dd7; border-radius: 4px; background: #799dd7; color: #fff; font-size: 14px; outline: none;`,
-    });
-    installCableBtn.onclick = function () {
-      // Redirect to the Install Cable link in a new tab
-      window.open('https://mcm.amazon.com/cms/new?from_template=d3a442df-63cb-49b6-8501-60a202a1fa59', '_blank');
-    };
-
-    // Create the second button for "Patch Cable"
-    let patchCableBtn = createEle('button', 'Patch Cable', {
-      style: `width: 120px; height: 32px; margin: 15px 10px 0 0; border: #799dd7; border-radius: 4px; background: #799dd7; color: #fff; font-size: 14px; outline: none;`,
-    });
-    patchCableBtn.onclick = function () {
-      // Redirect to the Patch Cable link in a new tab
-      window.open('https://mcm.amazon.com/cms/new?from_template=7b61ac86-0baa-44af-b9f5-be930912b72d', '_blank');
-    };
-
-    // Create the third button for "HW install"
-    let hwInstallBtn = createEle('button', 'HW install', {
-      style: `width: 120px; height: 32px; margin: 15px 10px 0 0; border: #799dd7; border-radius: 4px; background: #799dd7; color: #fff; font-size: 14px; outline: none;`,
-    });
-    hwInstallBtn.onclick = function () {
-      // Redirect to the HW install link in a new tab
-      window.open('https://mcm.amazon.com/cms/new?from_template=0d640ded-d096-48a6-b3f5-c7c2d5fa76a7', '_blank');
-    };
-
-    // Create the fourth button for "Cancel"
-    let cancelBtn = createEle('button', 'Cancel', {
-      style: `width: 120px; height: 32px; margin: 15px 0 0 0; border: #ccc; border-radius: 4px; background: #ccc; color: #fff; font-size: 14px; outline: none;`,
-    });
-    cancelBtn.onclick = function () {
-      // Close the pop-up window
-      alertBox.style.display = 'none';
-    };
-
-    alertBox.appendChild(resultText);
-    alertBox.appendChild(installCableBtn);
-    alertBox.appendChild(patchCableBtn);
-    alertBox.appendChild(hwInstallBtn);
-    alertBox.appendChild(cancelBtn); // Add the "Cancel" button
-    document.body.appendChild(alertBox);
-  }
-
-  // Check if the browser is Chrome before proceeding
-  if (isChrome) {
-    // Call the copyPageTitleAndURL function when the page loads
-    window.addEventListener('load', copyPageTitleAndURL);
   }
 })();
