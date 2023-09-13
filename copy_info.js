@@ -6,6 +6,8 @@
 // @match        https://sim.amazon.com/issues/*
 // @match        https://issues.amazon.com/issues/*
 // @match        https://tt.amazon.com/*
+// @updateURL    https://raw.githubusercontent.com/joshm3u/copy-mandatory-info/main/copy_info.js
+// @downloadURL  https://raw.githubusercontent.com/joshm3u/copy-mandatory-info/main/copy_info.js
 // @grant        GM_setClipboard
 // ==/UserScript==
 
