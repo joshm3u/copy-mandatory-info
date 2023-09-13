@@ -1,8 +1,9 @@
 // ==UserScript==
 // @name         Copy mandatory information
 // @namespace    https://*.amazon.com
-// @version      0.2
-// @description  One-click copy of page title in Markdown format and display it in a pop-up window
+// @version      0.3
+// @author       chengng@
+// @description  One-click copy of page title in Markdown format
 // @match        https://sim.amazon.com/issues/*
 // @match        https://issues.amazon.com/issues/*
 // @match        https://tt.amazon.com/*
@@ -15,10 +16,21 @@
 REVISION HISTORY:
 0.1 - 2023-09-13 - chengng@ - Initial setup
 0.2 - 2023-09-13 - chengng@ - Modify to alert users that creation of MCM only works with Chrome
+0.3 - 2023-09-13 - chengng@ - add author info, browser detection
 */
 
 (function () {
   'use strict';
+
+  // Detect the user's browser
+  const isChrome = /Chrome/.test(navigator.userAgent);
+
+  // Check if the browser is Chrome
+  if (!isChrome) {
+    // Display a pop-up alert for non-Chrome browsers
+    alert("You are not using Chrome at the moment. Due to browser limitations in reading clipboard information, this script is only compatible with Chrome. This script will now abort.");
+    return; // Abort the script
+  }
 
   // This function is used to create an HTML element with specified attributes and text content
   function createEle(eleName, text, attrs) {
@@ -83,7 +95,7 @@ REVISION HISTORY:
       style: `position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); border-radius: 4px; padding: 20px 20px; width: 450px; background: #292A2D; color: #ffffff; line-height: 20px; z-index: 300; font-size: 16px; font-family: Microsoft YaHei;`,
     });
 
-    let resultText = createEle('p', 'Information copied, the below creation of MCM only workds with Chrome', {
+    let resultText = createEle('p', 'Information copied, the below creation of MCM only works with Chrome', {
       style: `color: #ffffff; font-size: 16px; margin: 0;`,
     });
 
@@ -92,7 +104,7 @@ REVISION HISTORY:
       style: `width: 120px; height: 32px; margin: 15px 10px 0 0; border: #799dd7; border-radius: 4px; background: #799dd7; color: #fff; font-size: 14px; outline: none;`,
     });
     installCableBtn.onclick = function () {
-      // Redirect to the Install Cable link
+      // Redirect to the Install Cable link in a new tab
       window.open('https://mcm.amazon.com/cms/new?from_template=d3a442df-63cb-49b6-8501-60a202a1fa59', '_blank');
     };
 
@@ -101,7 +113,7 @@ REVISION HISTORY:
       style: `width: 120px; height: 32px; margin: 15px 10px 0 0; border: #799dd7; border-radius: 4px; background: #799dd7; color: #fff; font-size: 14px; outline: none;`,
     });
     patchCableBtn.onclick = function () {
-      // Redirect to the Patch Cable link
+      // Redirect to the Patch Cable link in a new tab
       window.open('https://mcm.amazon.com/cms/new?from_template=7b61ac86-0baa-44af-b9f5-be930912b72d', '_blank');
     };
 
@@ -110,8 +122,8 @@ REVISION HISTORY:
       style: `width: 120px; height: 32px; margin: 15px 10px 0 0; border: #799dd7; border-radius: 4px; background: #799dd7; color: #fff; font-size: 14px; outline: none;`,
     });
     hwInstallBtn.onclick = function () {
-      // Redirect to the HW install link
-      window.open('https://mcm.amazon.com/cms/new?from_template=0d640ded-d096-48a6-b3f5-c7c2d5fa76a7', '_blank');;
+      // Redirect to the HW install link in a new tab
+      window.open('https://mcm.amazon.com/cms/new?from_template=0d640ded-d096-48a6-b3f5-c7c2d5fa76a7', '_blank');
     };
 
     // Create the fourth button for "Cancel"
@@ -131,6 +143,9 @@ REVISION HISTORY:
     document.body.appendChild(alertBox);
   }
 
-  // Call the copyPageTitleAndURL function when the page loads
-  window.addEventListener('load', copyPageTitleAndURL);
+  // Check if the browser is Chrome before proceeding
+  if (isChrome) {
+    // Call the copyPageTitleAndURL function when the page loads
+    window.addEventListener('load', copyPageTitleAndURL);
+  }
 })();
